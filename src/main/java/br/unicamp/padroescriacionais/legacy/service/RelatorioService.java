@@ -1,14 +1,13 @@
 package br.unicamp.padroescriacionais.legacy.service;
 
+import java.time.LocalDateTime;
+
 import br.unicamp.padroescriacionais.legacy.domain.ConfiguracaoSistema;
 import br.unicamp.padroescriacionais.legacy.domain.FormatoRelatorio;
 import br.unicamp.padroescriacionais.legacy.domain.Relatorio;
 import br.unicamp.padroescriacionais.legacy.domain.TipoRelatorio;
-import br.unicamp.padroescriacionais.legacy.generator.CsvRelatorioGenerator;
-import br.unicamp.padroescriacionais.legacy.generator.JsonRelatorioGenerator;
-import br.unicamp.padroescriacionais.legacy.generator.PdfRelatorioGenerator;
-
-import java.time.LocalDateTime;
+import br.unicamp.padroescriacionais.legacy.generator.IRelatorioGenerator;
+import br.unicamp.padroescriacionais.legacy.generator.RelatorioGeneratorFactory;
 
 public class RelatorioService {
 
@@ -45,18 +44,9 @@ public class RelatorioService {
             System.out.println("[DEBUG-RelatorioService] Gerando: " + tipo + " -> " + formato);
         }
 
-        if (formato == FormatoRelatorio.PDF) {
-            PdfRelatorioGenerator generator = new PdfRelatorioGenerator();
-            return generator.gerar(relatorio);
-        } else if (formato == FormatoRelatorio.CSV) {
-            CsvRelatorioGenerator generator = new CsvRelatorioGenerator();
-            return generator.gerar(relatorio);
-        } else if (formato == FormatoRelatorio.JSON) {
-            JsonRelatorioGenerator generator = new JsonRelatorioGenerator();
-            return generator.gerar(relatorio);
-        } else {
-            throw new IllegalArgumentException("Formato desconhecido: " + formato);
-        }
+        // Parte 1: Uso da Fábrica
+        IRelatorioGenerator generator = RelatorioGeneratorFactory.createGenerator(formato);
+        return generator.gerar(relatorio);
     }
 
     private String gerarConteudoVendas() {
