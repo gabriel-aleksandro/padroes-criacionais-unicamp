@@ -8,13 +8,8 @@ import br.unicamp.padroescriacionais.legacy.generator.JsonRelatorioGenerator;
 import br.unicamp.padroescriacionais.legacy.generator.PdfRelatorioGenerator;
 
 public class ExportacaoService {
-
-    private ConfiguracaoSistema configuracao = new ConfiguracaoSistema(
-            "Empresa XPTO Ltda.",
-            "PROD",
-            "/var/exports/relatorios",
-            false
-    );
+    
+    private ConfiguracaoSistema configuracao = ConfiguracaoSistema.getInstance();
 
     public void exportar(Relatorio relatorio, FormatoRelatorio formato) {
         String conteudoFormatado;
