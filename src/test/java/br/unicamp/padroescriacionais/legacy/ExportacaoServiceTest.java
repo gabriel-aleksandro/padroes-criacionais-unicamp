@@ -1,5 +1,6 @@
 package br.unicamp.padroescriacionais.legacy;
 
+import br.unicamp.padroescriacionais.legacy.domain.ConfiguracaoSistema;
 import br.unicamp.padroescriacionais.legacy.domain.FormatoRelatorio;
 import br.unicamp.padroescriacionais.legacy.domain.Relatorio;
 import br.unicamp.padroescriacionais.legacy.domain.TipoRelatorio;
@@ -28,6 +29,11 @@ class ExportacaoServiceTest {
         relatorioService = new RelatorioService();
         saidaCapturada = new ByteArrayOutputStream();
         System.setOut(new PrintStream(saidaCapturada));
+
+        // Configura o estado do Singleton para os testes
+        ConfiguracaoSistema.getInstance().setNomeEmpresa("Empresa Teste");
+        ConfiguracaoSistema.getInstance().setAmbiente("DEV");
+        ConfiguracaoSistema.getInstance().setDiretorioExportacao("/tmp");
     }
 
     @AfterEach
@@ -70,7 +76,7 @@ class ExportacaoServiceTest {
 
         String saida = saidaCapturada.toString();
         assertFalse(saida.isBlank());
-        assertTrue(saida.contains("Empresa"), "Saida deve mencionar a empresa");
+        assertTrue(saida.contains("Empresa Teste"), "Saida deve mencionar a empresa configurada no Singleton");
     }
 
     @Test

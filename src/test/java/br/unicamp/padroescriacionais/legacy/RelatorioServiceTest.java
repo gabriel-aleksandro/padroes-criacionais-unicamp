@@ -1,5 +1,6 @@
 package br.unicamp.padroescriacionais.legacy;
 
+import br.unicamp.padroescriacionais.legacy.domain.ConfiguracaoSistema;
 import br.unicamp.padroescriacionais.legacy.domain.FormatoRelatorio;
 import br.unicamp.padroescriacionais.legacy.domain.Relatorio;
 import br.unicamp.padroescriacionais.legacy.domain.TipoRelatorio;
@@ -16,6 +17,8 @@ class RelatorioServiceTest {
     @BeforeEach
     void setUp() {
         service = new RelatorioService();
+        // Desativa o debug no Singleton para não sujar o log de testes
+        ConfiguracaoSistema.getInstance().setDebugAtivo(false);
     }
 
     @Test
@@ -50,7 +53,7 @@ class RelatorioServiceTest {
     }
 
     @Test
-    void todosTiposDevemProduizirRelatorioValido() {
+    void todosTiposDevemProduzirRelatorioValido() {
         for (TipoRelatorio tipo : TipoRelatorio.values()) {
             Relatorio relatorio = service.criarRelatorio(tipo);
             assertNotNull(relatorio, "Relatorio nulo para tipo: " + tipo);
@@ -61,6 +64,7 @@ class RelatorioServiceTest {
 
     @Test
     void deveGerarConteudoPdfNaoVazio() {
+        // Este teste agora utiliza a Factory Method indiretamente e continua funcionando!
         String resultado = service.gerarRelatorio(TipoRelatorio.VENDAS, FormatoRelatorio.PDF);
 
         assertNotNull(resultado);
@@ -88,7 +92,7 @@ class RelatorioServiceTest {
     }
 
     @Test
-    void todosFormatosDevemProduizirConteudoValido() {
+    void todosFormatosDevemProduzirConteudoValido() {
         for (FormatoRelatorio formato : FormatoRelatorio.values()) {
             String resultado = service.gerarRelatorio(TipoRelatorio.VENDAS, formato);
             assertNotNull(resultado, "Resultado nulo para formato: " + formato);
